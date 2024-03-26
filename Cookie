@@ -1,8 +1,8 @@
 修改浏览器设置允许第三方Cookie
-下面是如何通过Selenium的ChromeOptions来修改Chrome浏览器设置，尝试允许第三方Cookie的一个例子。请注意，具体的设置项可能随着浏览器版本的更新而改变：
+下面是如何通过Selenium的ChromeOptions来修改Chrome浏览器设置，尝试允许第三方Cookie的一个例子。
+请注意，具体的设置项可能随着浏览器版本的更新而改变：
 
-python
-Copy code
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -10,5 +10,4 @@ options = Options()
 options.add_argument('--headless')
 # 可能的选项来尝试修改Cookie设置，具体依赖于浏览器和其版本
 options.add_argument('--enable-features=SameSiteByDefaultCookies,CookiesWithoutSameSiteMustBeSecure')
-
 driver = webdriver.Chrome(options=options)
