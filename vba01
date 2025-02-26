@@ -1,31 +1,37 @@
-Sub CreateScatterChart()
+Sub CreateChartDynamic()
     Dim ws As Worksheet
-    Dim chartObj As ChartObject
-    Dim rng As Range
+    Dim chObj As ChartObject
+    Dim lastChart As Chart
     
-    ' 设定当前工作表
+    ' 当前活动的工作表
     Set ws = ActiveSheet
     
-    ' 选中 A、B、C 列的所有数据（假设数据从第 1 行开始）
-    Set rng = ws.Range("A1:C" & ws.Cells(Rows.Count, 1).End(xlUp).Row)
+    ' B列～D列的所有数据
+    Columns("B:D").Select
     
-    ' 创建一个图表对象
-    Set chartObj = ws.ChartObjects.Add(Left:=100, Top:=50, Width:=400, Height:=300)
+    ' 插入散布图（直线无标记）
+    Set chObj = ws.ChartObjects.Add(Left:=100, Top:=50, Width:=400, Height:=300)
     
-    ' 设置图表类型为散点图（直线型散布図）
-    With chartObj.Chart
-        .SetSourceData Source:=rng
-        .ChartType = xlXYScatterLines ' 直线型散布图
-        .HasTitle = True
-        .ChartTitle.Text = "PCの使用率" ' 图表标题
-        .Axes(xlCategory).HasTitle = True
-        .Axes(xlCategory).AxisTitle.Text = "X 軸 (カテゴリ)" ' X 轴标题
-        .Axes(xlValue).HasTitle = True
-        .Axes(xlValue).AxisTitle.Text = "Y 軸 (使用率 %)" ' Y 轴标题
-        .Legend.Position = xlBottom ' 图例放在底部
-    End With
-
-    ' 提示完成
-    MsgBox "PCの使用率の散布図が作成されました！", vbInformation, "完了"
+    ' 获取刚刚创建的最新图表
+    Set lastChart = chObj.Chart
+    
+    ' 设置数据范围
+    lastChart.SetSourceData Source:=ws.Range("B8:B50")
+    
+    ' 设置图表类型为散布图（直线无标记）
+    lastChart.ChartType = xlXYScatterLinesNoMarkers
+    
+    ' 设置 Y 轴最大值为 100
+    lastChart.Axes(xlValue).MaximumScale = 100
+    
+    ' 设置 X 轴（横轴）数据格式
+    lastChart.Axes(xlCategory).TickLabels.NumberFormatLocal = "m/d/yyyy"
+    
+    ' 设置图表标题
+    lastChart.HasTitle = True
+    lastChart.ChartTitle.Text = "PCの使用率"
+    
+    ' 提示操作完成
+    MsgBox "グラフが作成されました！", vbInformation, "完了"
 
 End Sub
