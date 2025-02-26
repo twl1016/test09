@@ -3,29 +3,29 @@ Sub CreateScatterChart()
     Dim chartObj As ChartObject
     Dim chart As Chart
     Dim chartName As String
-    
+
     ' 设置工作表
     Set ws = ThisWorkbook.Sheets("商用環境_1分グラフ")
-    
+
     ' 在指定范围创建图表
     Set chartObj = ws.ChartObjects.Add(Left:=50, Top:=50, Width:=400, Height:=300)
     Set chart = chartObj.Chart
-    
+
     ' 设置图表类型
     chart.ChartType = xlXYScatterLinesNoMarkers
-    
+
     ' 设定数据源
     chart.SetSourceData Source:=ws.Range("E:H")
-    
-    ' 设置图表名称（如果需要）
+
+    ' 设置图表名称
     chartName = "商用環境_图表"
     chartObj.Name = chartName
-    
+
     ' 移动图表到指定位置
     chartObj.Left = 50
     chartObj.Top = 50
     chartObj.Width = chartObj.Width * 1.4281251094  ' 调整宽度
-    
+
     ' 设置图表标题
     With chart
         .HasTitle = True
@@ -42,7 +42,7 @@ Sub CreateScatterChart()
             End With
         End With
     End With
-    
+
     ' 设置纵轴 (Y 轴) 取值范围
     With chart.Axes(xlValue)
         .MinimumScale = 40
@@ -55,7 +55,11 @@ Sub CreateScatterChart()
         .MaximumScale = 45701
         .TickLabels.NumberFormatLocal = "m/d/yyyy"
     End With
-    
+
+    ' **设置图例位置在底部**
+    chart.HasLegend = True
+    chart.Legend.Position = xlLegendPositionBottom
+
     ' 释放对象
     Set chart = Nothing
     Set chartObj = Nothing
