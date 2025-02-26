@@ -1,4 +1,4 @@
-Sub CreateLineChart()
+Sub CreateScatterChart()
     Dim ws As Worksheet
     Dim chartObj As ChartObject
     Dim rng As Range
@@ -12,12 +12,12 @@ Sub CreateLineChart()
     ' 创建一个图表对象
     Set chartObj = ws.ChartObjects.Add(Left:=100, Top:=50, Width:=400, Height:=300)
     
-    ' 设置图表类型为折线图（折れ線直線図表）
+    ' 设置图表类型为散点图（直线型散布図）
     With chartObj.Chart
         .SetSourceData Source:=rng
-        .ChartType = xlLine ' 折线图
+        .ChartType = xlXYScatterLines ' 直线型散布图
         .HasTitle = True
-        .ChartTitle.Text = "PCの使用率" ' 设置图表标题
+        .ChartTitle.Text = "PCの使用率" ' 图表标题
         .Axes(xlCategory).HasTitle = True
         .Axes(xlCategory).AxisTitle.Text = "X 軸 (カテゴリ)" ' X 轴标题
         .Axes(xlValue).HasTitle = True
@@ -26,6 +26,6 @@ Sub CreateLineChart()
     End With
 
     ' 提示完成
-    MsgBox "PCの使用率のグラフが作成されました！", vbInformation, "完了"
+    MsgBox "PCの使用率の散布図が作成されました！", vbInformation, "完了"
 
 End Sub
