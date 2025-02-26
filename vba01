@@ -41,3 +41,11 @@ Sub CreateScatterChartInSheet0001()
     ' マクロ実行完了のメッセージを表示
     MsgBox "散布図（直線・マーカーなし）が「0001」シートに作成されました！", vbInformation, "完了"
 End Sub
+
+
+Sub ListAllSheets()
+    Dim ws As Worksheet
+    For Each ws In ThisWorkbook.Sheets
+        Debug.Print ws.Name  ' 输出到立即窗口 (Ctrl+G 查看)
+    Next ws
+End Sub
