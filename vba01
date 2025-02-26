@@ -1,51 +1,63 @@
-Sub CreateScatterChartInSheet0001()
-    Dim wsSource As Worksheet ' データ元のワークシート（「0001」）
-    Dim chObj As ChartObject ' グラフオブジェクト
-    Dim chart As Chart ' 実際のグラフ
-    Dim rng As Range ' データ範囲
+Sub CreateScatterChart()
+    Dim ws As Worksheet
+    Dim chartObj As ChartObject
+    Dim chart As Chart
+    Dim chartName As String
     
-    ' データ元およびグラフを作成するシートを「0001」に設定
-    Set wsSource = ThisWorkbook.Sheets("0001")
+    ' 设置工作表
+    Set ws = ThisWorkbook.Sheets("商用環境_1分グラフ")
     
-    ' 「0001」シートの B〜D 列のデータ範囲を取得（最後のデータ行を自動検出）
-    Set rng = wsSource.Range("B1:D" & wsSource.Cells(Rows.Count, "B").End(xlUp).Row)
+    ' 在指定范围创建图表
+    Set chartObj = ws.ChartObjects.Add(Left:=50, Top:=50, Width:=400, Height:=300)
+    Set chart = chartObj.Chart
     
-    ' 「0001」シートに新しい埋め込みグラフを作成
-    Set chObj = wsSource.ChartObjects.Add(Left:=100, Top:=50, Width:=400, Height:=300)
-    
-    ' 作成されたグラフを取得
-    Set chart = chObj.Chart
-    
-    ' データ範囲を設定（「0001」シートの B〜D 列）
-    chart.SetSourceData Source:=rng
-    
-    ' グラフの種類を散布図（直線・マーカーなし）に設定
+    ' 设置图表类型
     chart.ChartType = xlXYScatterLinesNoMarkers
     
-    ' Y軸（値軸）の最大値を 100、最小値を 0 に設定
+    ' 设定数据源
+    chart.SetSourceData Source:=ws.Range("E:H")
+    
+    ' 设置图表名称（如果需要）
+    chartName = "商用環境_图表"
+    chartObj.Name = chartName
+    
+    ' 移动图表到指定位置
+    chartObj.Left = 50
+    chartObj.Top = 50
+    chartObj.Width = chartObj.Width * 1.4281251094  ' 调整宽度
+    
+    ' 设置图表标题
+    With chart
+        .HasTitle = True
+        .ChartTitle.Text = "testaaa"
+        With .ChartTitle.Format.TextFrame2.TextRange
+            .Text = "testaaa"
+            With .Characters(1, 7).Font
+                .Size = 14
+                .Bold = msoFalse
+                .Italic = msoFalse
+                .Fill.ForeColor.RGB = RGB(89, 89, 89)
+                .UnderlineStyle = msoNoUnderline
+                .Strike = msoNoStrike
+            End With
+        End With
+    End With
+    
+    ' 设置纵轴 (Y 轴) 取值范围
     With chart.Axes(xlValue)
+        .MinimumScale = 40
         .MaximumScale = 100
-        .MinimumScale = 0
     End With
-    
-    ' X軸（カテゴリ軸）の設定
+
+    ' 设置横轴 (X 轴) 取值范围
     With chart.Axes(xlCategory)
-        .TickLabels.NumberFormatLocal = "m/d/yyyy" ' X軸ラベルの表示形式（年月日）
-        .MinimumScale = .MinimumScale + 1 ' X軸の最小値を +1
+        .MinimumScale = 45694
+        .MaximumScale = 45701
+        .TickLabels.NumberFormatLocal = "m/d/yyyy"
     End With
     
-    ' グラフタイトルを設定
-    chart.HasTitle = True
-    chart.ChartTitle.Text = "PCの使用率"
-
-    ' マクロ実行完了のメッセージを表示
-    MsgBox "散布図（直線・マーカーなし）が「0001」シートに作成されました！", vbInformation, "完了"
-End Sub
-
-
-Sub ListAllSheets()
-    Dim ws As Worksheet
-    For Each ws In ThisWorkbook.Sheets
-        Debug.Print ws.Name  ' 输出到立即窗口 (Ctrl+G 查看)
-    Next ws
+    ' 释放对象
+    Set chart = Nothing
+    Set chartObj = Nothing
+    Set ws = Nothing
 End Sub
