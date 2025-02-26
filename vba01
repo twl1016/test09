@@ -1,37 +1,43 @@
-Sub CreateChartDynamic()
-    Dim ws As Worksheet
-    Dim chObj As ChartObject
-    Dim lastChart As Chart
+Sub CreateScatterChartInSheet0001()
+    Dim wsSource As Worksheet ' データ元のワークシート（「0001」）
+    Dim chObj As ChartObject ' グラフオブジェクト
+    Dim chart As Chart ' 実際のグラフ
+    Dim rng As Range ' データ範囲
     
-    ' 当前活动的工作表
-    Set ws = ActiveSheet
+    ' データ元およびグラフを作成するシートを「0001」に設定
+    Set wsSource = ThisWorkbook.Sheets("0001")
     
-    ' B列～D列的所有数据
-    Columns("B:D").Select
+    ' 「0001」シートの B〜D 列のデータ範囲を取得（最後のデータ行を自動検出）
+    Set rng = wsSource.Range("B1:D" & wsSource.Cells(Rows.Count, "B").End(xlUp).Row)
     
-    ' 插入散布图（直线无标记）
-    Set chObj = ws.ChartObjects.Add(Left:=100, Top:=50, Width:=400, Height:=300)
+    ' 「0001」シートに新しい埋め込みグラフを作成
+    Set chObj = wsSource.ChartObjects.Add(Left:=100, Top:=50, Width:=400, Height:=300)
     
-    ' 获取刚刚创建的最新图表
-    Set lastChart = chObj.Chart
+    ' 作成されたグラフを取得
+    Set chart = chObj.Chart
     
-    ' 设置数据范围
-    lastChart.SetSourceData Source:=ws.Range("B8:B50")
+    ' データ範囲を設定（「0001」シートの B〜D 列）
+    chart.SetSourceData Source:=rng
     
-    ' 设置图表类型为散布图（直线无标记）
-    lastChart.ChartType = xlXYScatterLinesNoMarkers
+    ' グラフの種類を散布図（直線・マーカーなし）に設定
+    chart.ChartType = xlXYScatterLinesNoMarkers
     
-    ' 设置 Y 轴最大值为 100
-    lastChart.Axes(xlValue).MaximumScale = 100
+    ' Y軸（値軸）の最大値を 100、最小値を 0 に設定
+    With chart.Axes(xlValue)
+        .MaximumScale = 100
+        .MinimumScale = 0
+    End With
     
-    ' 设置 X 轴（横轴）数据格式
-    lastChart.Axes(xlCategory).TickLabels.NumberFormatLocal = "m/d/yyyy"
+    ' X軸（カテゴリ軸）の設定
+    With chart.Axes(xlCategory)
+        .TickLabels.NumberFormatLocal = "m/d/yyyy" ' X軸ラベルの表示形式（年月日）
+        .MinimumScale = .MinimumScale + 1 ' X軸の最小値を +1
+    End With
     
-    ' 设置图表标题
-    lastChart.HasTitle = True
-    lastChart.ChartTitle.Text = "PCの使用率"
-    
-    ' 提示操作完成
-    MsgBox "グラフが作成されました！", vbInformation, "完了"
+    ' グラフタイトルを設定
+    chart.HasTitle = True
+    chart.ChartTitle.Text = "PCの使用率"
 
+    ' マクロ実行完了のメッセージを表示
+    MsgBox "散布図（直線・マーカーなし）が「0001」シートに作成されました！", vbInformation, "完了"
 End Sub
